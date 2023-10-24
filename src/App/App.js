@@ -9,24 +9,7 @@ import { BASIS_POINTS_DIVISOR } from "config/factors";
 import { getAppBaseUrl, isHomeSite, REFERRAL_CODE_QUERY_PARAM } from "lib/legacy";
 
 import { decodeReferralCode, encodeReferralCode } from "domain/referrals";
-import Actions from "pages/Actions/Actions";
-import BeginAccountTransfer from "pages/BeginAccountTransfer/BeginAccountTransfer";
-import Buy from "pages/Buy/Buy";
-import BuyGlp from "pages/BuyGlp/BuyGlp";
-import BuyGMX from "pages/BuyGMX/BuyGMX";
-import ClaimEsGmx from "pages/ClaimEsGmx/ClaimEsGmx";
-import CompleteAccountTransfer from "pages/CompleteAccountTransfer/CompleteAccountTransfer";
-import Dashboard from "pages/Dashboard/Dashboard";
-import Ecosystem from "pages/Ecosystem/Ecosystem";
-import { Exchange } from "pages/Exchange/Exchange";
 import Home from "pages/Home/Home";
-import NftWallet from "pages/NftWallet/NftWallet";
-import OrdersOverview from "pages/OrdersOverview/OrdersOverview";
-import PositionsOverview from "pages/PositionsOverview/PositionsOverview";
-import Referrals from "pages/Referrals/Referrals";
-import ReferralsTier from "pages/ReferralsTier/ReferralsTier";
-import Stake from "pages/Stake/Stake";
-import Stats from "pages/Stats/Stats";
 
 import Checkbox from "components/Checkbox/Checkbox";
 import Modal from "components/Modal/Modal";
@@ -50,10 +33,6 @@ import VaultV2b from "abis/VaultV2b.json";
 import { RedirectPopupModal } from "components/ModalViews/RedirectModal";
 import { getContract } from "config/contracts";
 import { REDIRECT_POPUP_TIMESTAMP_KEY, TRADE_LINK_KEY } from "config/localStorage";
-import Jobs from "pages/Jobs/Jobs";
-import PageNotFound from "pages/PageNotFound/PageNotFound";
-import ReferralTerms from "pages/ReferralTerms/ReferralTerms";
-import TermsAndConditions from "pages/TermsAndConditions/TermsAndConditions";
 import { useLocalStorage } from "react-use";
 
 import { i18n } from "@lingui/core";
@@ -85,11 +64,7 @@ import { defaultLocale, dynamicActivate } from "lib/i18n";
 import { useLocalStorageSerializeKey } from "lib/localStorage";
 import { roundToTwoDecimals } from "lib/numbers";
 import { useHasLostFocus } from "lib/useHasPageLostFocus";
-import { MarketPoolsPage } from "pages/MarketPoolsPage/MarketPoolsPage";
-import SyntheticsActions from "pages/SyntheticsActions/SyntheticsActions";
-import { SyntheticsFallbackPage } from "pages/SyntheticsFallbackPage/SyntheticsFallbackPage";
-import { SyntheticsPage } from "pages/SyntheticsPage/SyntheticsPage";
-import { SyntheticsStats } from "pages/SyntheticsStats/SyntheticsStats";
+
 import NumberInput from "components/NumberInput/NumberInput";
 import { watchNetwork } from "@wagmi/core";
 import { useDisconnect } from "wagmi";
@@ -383,159 +358,6 @@ function FullApp() {
             <Switch>
               <Route exact path="/">
                 <Home showRedirectModal={showRedirectModal} redirectPopupTimestamp={redirectPopupTimestamp} />
-              </Route>
-              <Route exact path="/referral-terms">
-                <ReferralTerms />
-              </Route>
-              <Route exact path="/terms-and-conditions">
-                <TermsAndConditions />
-              </Route>
-              <Route path="*">
-                <PageNotFound />
-              </Route>
-            </Switch>
-          )}
-          {!isHome && (
-            <Switch>
-              <Route exact path="/">
-                <Redirect to="/dashboard" />
-              </Route>
-              <Route exact path="/v1">
-                <Exchange
-                  ref={exchangeRef}
-                  savedShowPnlAfterFees={savedShowPnlAfterFees}
-                  savedIsPnlInLeverage={savedIsPnlInLeverage}
-                  setSavedIsPnlInLeverage={setSavedIsPnlInLeverage}
-                  savedSlippageAmount={settings.savedAllowedSlippage}
-                  setPendingTxns={setPendingTxns}
-                  pendingTxns={pendingTxns}
-                  savedShouldShowPositionLines={savedShouldShowPositionLines}
-                  setSavedShouldShowPositionLines={setSavedShouldShowPositionLines}
-                  savedShouldDisableValidationForTesting={savedShouldDisableValidationForTesting}
-                  tradePageVersion={tradePageVersion}
-                  setTradePageVersion={setTradePageVersion}
-                  openSettings={openSettings}
-                />
-              </Route>
-              <Route exact path="/dashboard">
-                <Dashboard />
-              </Route>
-              <Route exact path="/stats/v1">
-                <Stats />
-              </Route>
-              <Redirect exact from="/stats/v2" to="/stats" />
-              <Route exact path="/stats">
-                {getIsSyntheticsSupported(chainId) ? <SyntheticsStats /> : <SyntheticsFallbackPage />}
-              </Route>
-              <Route exact path="/earn">
-                <Stake setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/buy">
-                <Buy savedSlippageAmount={settings.savedAllowedSlippage} setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/pools">
-                {getIsSyntheticsSupported(chainId) ? (
-                  <MarketPoolsPage
-                    shouldDisableValidation={savedShouldDisableValidationForTesting}
-                    setPendingTxns={setPendingTxns}
-                  />
-                ) : (
-                  <SyntheticsFallbackPage />
-                )}
-              </Route>
-
-              <Route exact path="/trade">
-                {getIsSyntheticsSupported(chainId) ? (
-                  <SyntheticsPage
-                    savedIsPnlInLeverage={savedIsPnlInLeverage}
-                    shouldDisableValidation={savedShouldDisableValidationForTesting}
-                    savedShouldShowPositionLines={savedShouldShowPositionLines}
-                    setSavedShouldShowPositionLines={setSavedShouldShowPositionLines}
-                    setPendingTxns={setPendingTxns}
-                    showPnlAfterFees={showPnlAfterFees}
-                    savedShowPnlAfterFees={savedShowPnlAfterFees}
-                    tradePageVersion={tradePageVersion}
-                    setTradePageVersion={setTradePageVersion}
-                    savedSlippageAmount={settings.savedAllowedSlippage}
-                    openSettings={openSettings}
-                  />
-                ) : (
-                  <SyntheticsFallbackPage />
-                )}
-              </Route>
-              <Redirect from="/v2" to="/trade" />
-              <Route exact path="/buy_glp">
-                <BuyGlp
-                  savedSlippageAmount={settings.savedAllowedSlippage}
-                  setPendingTxns={setPendingTxns}
-                  savedShouldDisableValidationForTesting={savedShouldDisableValidationForTesting}
-                />
-              </Route>
-              <Route exact path="/jobs">
-                <Jobs />
-              </Route>
-              <Route exact path="/buy_gmx">
-                <BuyGMX />
-              </Route>
-              <Route exact path="/ecosystem">
-                <Ecosystem />
-              </Route>
-              <Route exact path="/referrals">
-                <Referrals pendingTxns={pendingTxns} setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/referrals/:account">
-                <Referrals pendingTxns={pendingTxns} setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/nft_wallet">
-                <NftWallet />
-              </Route>
-              <Route exact path="/claim_es_gmx">
-                <ClaimEsGmx setPendingTxns={setPendingTxns} />
-              </Route>
-
-              <Route exact path="/actions/v1">
-                <Actions />
-              </Route>
-              <Route exact path="/actions/v1/:account">
-                <Actions savedIsPnlInLeverage={savedIsPnlInLeverage} savedShowPnlAfterFees={savedShowPnlAfterFees} />
-              </Route>
-              <Route exact path="/actions">
-                <SyntheticsActions
-                  savedIsPnlInLeverage={savedIsPnlInLeverage}
-                  savedShowPnlAfterFees={savedShowPnlAfterFees}
-                />
-              </Route>
-              <Redirect exact from="/actions/v2" to="/actions" />
-              <Route exact path="/actions/:account">
-                <SyntheticsActions
-                  savedIsPnlInLeverage={savedIsPnlInLeverage}
-                  savedShowPnlAfterFees={savedShowPnlAfterFees}
-                />
-              </Route>
-              <Route path="/actions/v2/:account">
-                {({ match }) => <Redirect to={`/actions/${match.params.account}`} />}
-              </Route>
-              <Route exact path="/referrals-tier">
-                <ReferralsTier />
-              </Route>
-              <Route exact path="/stats">
-                <Stats />
-              </Route>
-              <Route exact path="/orders_overview">
-                <OrdersOverview />
-              </Route>
-              <Route exact path="/positions_overview">
-                <PositionsOverview />
-              </Route>
-              <Route exact path="/begin_account_transfer">
-                <BeginAccountTransfer setPendingTxns={setPendingTxns} />
-              </Route>
-              <Route exact path="/complete_account_transfer/:sender/:receiver">
-                <CompleteAccountTransfer setPendingTxns={setPendingTxns} />
-              </Route>
-
-              <Route path="*">
-                <PageNotFound />
               </Route>
             </Switch>
           )}
